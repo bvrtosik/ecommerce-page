@@ -1,7 +1,11 @@
+import Button from "@/components/Button";
+import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
+import ProductImages from "@/components/ProductImages";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/model/Product";
+import { useContext } from "react";
 import { styled } from "styled-components";
 
 const Title = styled.h1`
@@ -21,16 +25,41 @@ const Box = styled.div`
   padding: 30px;
 `;
 
+const BuyRow = styled.div`
+  gap: 20px;
+  display: flex;
+`;
+const Price = styled.span`
+  font-size: 1.2rem;
+`;
+
 export default function ProductPage({ product }) {
+  const {addProduct} = useContext(CartContext)
   return (
     <>
       <Header />
       <Center>
         <ColWrapper>
-          <Box>zdjęcie</Box>
+          <Box>
+            <ProductImages images={product.images} />
+          </Box>
           <div>
             <Title>{product.title}</Title>
-            <p>Opis produktu</p>
+            <p>{product.description}</p>
+            <BuyRow>
+              <div>
+                <Price>{product.price} PLN</Price>
+              </div>
+              <div>
+                <Button
+                  $primary={1}
+                  $outline={1}
+                  onClick={() => addProduct(_id)}
+                >
+                  Dodaj do koszyka
+                </Button>
+              </div>
+            </BuyRow>
           </div>
         </ColWrapper>
       </Center>
