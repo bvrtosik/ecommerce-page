@@ -8,7 +8,7 @@ const Image = styled.img`
 
 const HomeImage = styled.img`
   max-width: 100%;
-  max-height: 200px;
+  max-height: 500px;
 `;
 
 const HomeImageWrapper = styled.div`
@@ -20,11 +20,16 @@ const ImageGrid = styled.div`
   gap: 10px;
   flex-grow: 0;
   margin-top: 10px;
+  justify-content: center;
+  item-align: center;
 `;
 
 const ImageBox = styled.div`
-${props => props.$active ? `
-border-color: black;` : `
+  ${(props) =>
+    props.active
+      ? `
+border-color: black;`
+      : `
 border-color: transparent;
 opacity: .7; `}
   border: 2px solid black;
@@ -43,7 +48,11 @@ export default function ProductImages({ images }) {
       </HomeImageWrapper>
       <ImageGrid>
         {images.map((image) => (
-          <ImageBox key={image} active={image===activeImage} onClick={() => setActiveImage(image)}>
+          <ImageBox
+            key={image}
+            active={image === activeImage}
+            onClick={() => setActiveImage(image)}
+          >
             <Image src={image} alt="" />
           </ImageBox>
         ))}

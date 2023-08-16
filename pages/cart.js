@@ -10,9 +10,12 @@ import { styled } from "styled-components";
 
 const ColWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
+  grid-template-columns: 1fr;
   gap: 40px;
   margin-top: 30px;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
 `;
 
 const CartBox = styled.div`
@@ -33,6 +36,7 @@ const ProductImageBox = styled.div`
   height: 100px;
   padding: 5px;
   border-radius: 10px;
+  margin-bottom: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   img {
     max-width: 85px;
@@ -41,7 +45,12 @@ const ProductImageBox = styled.div`
 `;
 
 const QuantityLabel = styled.span`
-  padding: 0 3px;
+  padding: 0 13px;
+  display: block;
+  @media screen and (min-width: 768px) {
+    display: inline-block;
+    padding: 0 3px;
+  }
 `;
 
 const AdresData = styled.div`
@@ -50,7 +59,8 @@ const AdresData = styled.div`
 `;
 
 export default function CartPage() {
-  const { cartProducts, addProduct, removeProduct, clearCart } = useContext(CartContext);
+  const { cartProducts, addProduct, removeProduct, clearCart } =
+    useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -58,7 +68,7 @@ export default function CartPage() {
   const [postCode, setPostCode] = useState("");
   const [street, setStreet] = useState("");
   const [numberHome, setNumberHome] = useState("");
-  const [isSuccess,setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -70,10 +80,10 @@ export default function CartPage() {
     }
   }, [cartProducts]);
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return;
     }
-    if (window?.location.href.includes('success')) {
+    if (window?.location.href.includes("success")) {
       setIsSuccess(true);
       clearCart();
     }

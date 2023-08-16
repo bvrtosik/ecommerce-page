@@ -6,7 +6,9 @@ import { Product } from "@/model/Product";
 import { styled } from "styled-components";
 
 const Title = styled.h1`
-  font-size: 1.5em;
+  font-size: 2em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 `;
 
 export default function ProductsPage({ products }) {

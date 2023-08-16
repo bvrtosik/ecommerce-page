@@ -13,8 +13,7 @@ const Title = styled.h1`
 `;
 
 const ColWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
+  display: flex;
   gap: 40px;
   margin-top: 30px;
 `;
@@ -26,41 +25,44 @@ const Box = styled.div`
 `;
 
 const BuyRow = styled.div`
+  margin-top: 10px;
   gap: 20px;
-  display: flex;
+  display: block;
+  justify-content: center;
+  text-align: center;
 `;
 const Price = styled.span`
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 500;
 `;
 
 export default function ProductPage({ product }) {
-  const {addProduct} = useContext(CartContext)
+  const { addProduct } = useContext(CartContext);
+  function addFeaturedToCart() {
+    addProduct(product._id);
+  }
   return (
     <>
       <Header />
       <Center>
         <ColWrapper>
           <Box>
-            <ProductImages images={product.images} />
-          </Box>
-          <div>
-            <Title>{product.title}</Title>
-            <p>{product.description}</p>
+            <div>
+              <ProductImages images={product.images} />
+            </div>
             <BuyRow>
-              <div>
-                <Price>{product.price} PLN</Price>
-              </div>
-              <div>
-                <Button
-                  $primary={1}
-                  $outline={1}
-                  onClick={() => addProduct(_id)}
-                >
-                  Dodaj do koszyka
-                </Button>
-              </div>
+              <Price>{product.price} PLN </Price>
+              <Button $primary={1} $outline={1} onClick={addFeaturedToCart}>
+                Dodaj do koszyka
+              </Button>
             </BuyRow>
-          </div>
+            <div>
+              <BuyRow>
+                <Title>{product.title}</Title>
+                {product.description}
+              </BuyRow>
+            </div>
+          </Box>
         </ColWrapper>
       </Center>
     </>

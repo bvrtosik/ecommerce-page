@@ -15,7 +15,10 @@ const Bground = styled.div`
 const Title = styled.h1`
   margin: 0;
   font-weight: normal;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
+  @media screen and (min-width: 768px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const Descrip = styled.p`
@@ -25,10 +28,22 @@ const Descrip = styled.p`
 
 const WrapperColumns = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 40px;
+  div:nth-child(1) {
+    order: 2;
+  }
   img {
     max-width: 100%;
+    max-height: 300px;
+    display: block;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    div:nth-child(1) {
+      order: 0;
+    }
   }
 `;
 
@@ -40,12 +55,12 @@ const Column = styled.div`
 const WrapperButtons = styled.div`
   display: flex;
   gap: 5px;
-  margin-top:20px;
+  margin-top: 20px;
 `;
 
-export default function Content({product}) {
-  const {addProduct} = useContext(CartContext);
-  function addFeaturedToCart(){
+export default function Content({ product }) {
+  const { addProduct } = useContext(CartContext);
+  function addFeaturedToCart() {
     addProduct(product._id);
   }
   return (
@@ -55,12 +70,22 @@ export default function Content({product}) {
           <Column>
             <div>
               <Title>{product.title}</Title>
-              <Descrip>
-                {product.Descrip}
-              </Descrip>
+              <Descrip>{product.description}</Descrip>
               <WrapperButtons>
-              <ButtonLink href={'/product/'+product._id} $white $outline $size="l">Czytaj więcej</ButtonLink>
-                <Button $primary $size="l" key="addFeaturedToCart" onClick={addFeaturedToCart}>
+                <ButtonLink
+                  href={"/product/" + product._id}
+                  $white
+                  $outline
+                  $size="l"
+                >
+                  Czytaj więcej
+                </ButtonLink>
+                <Button
+                  $primary
+                  $size="l"
+                  key="addFeaturedToCart"
+                  onClick={addFeaturedToCart}
+                >
                   Dodaj do koszyka
                 </Button>
               </WrapperButtons>
@@ -68,7 +93,7 @@ export default function Content({product}) {
           </Column>
           <Column>
             <img
-              src="http://res.cloudinary.com/dobfxe13v/image/upload/v1691178144/hgqefras5xkost0qlgjy.png"
+              src="http://res.cloudinary.com/dobfxe13v/image/upload/v1692051872/sfwpvf4y18gxribmzebh.png"
               alt=""
             />
           </Column>
