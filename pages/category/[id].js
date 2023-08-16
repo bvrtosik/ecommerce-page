@@ -1,6 +1,7 @@
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import ProductsGrid from "@/components/ProductsGrid";
+import Spinner from "@/components/Spinner";
 import { Category } from "@/model/Category";
 import { Product } from "@/model/Product";
 import axios from "axios";
@@ -45,10 +46,14 @@ export default function CategoryPage({
   subCategories,
   products: categoryProducts,
 }) {
-  const [filtersValues, setFiltersValues] = useState(
-    category.properties.map((p) => ({ name: p.name, value: "all" }))
-  );
+  const defaultSorting = '_id-desc';
+  const defaultFilterValues = category.properties.map((p) => ({ name: p.name, value: "all" }))
+  const [filtersValues, setFiltersValues] = useState(defaultFilterValues);
   const [products, setProducts] = useState(categoryProducts);
+  const [sort, setSort] = useState(defaultSorting);
+  const [loading, setLoading] = useState(false);
+  const [filtersChanged,setFiltersChanged] = useState(false);
+
   function handleFilterChange(filterName, filterValue) {
     setFiltersValues((prev) => {
       return prev.map((p) => ({
@@ -56,11 +61,17 @@ export default function CategoryPage({
         value: p.name === filterName ? filterValue : p.value,
       }));
     });
+    setFiltersChanged(true);
   }
   useEffect(() => {
+    if(!filtersChanged){
+      return;
+    }
+    setLoading(true);
     const catIds = [category._id, ...(subCategories?.map((c) => c._id) || [])];
     const params = new URLSearchParams();
     params.set("categories", catIds.join(","));
+    params.set("sort", sort);
     filtersValues.forEach((f) => {
       if (f.value !== "all") {
         params.set(f.name, f.value);
@@ -69,8 +80,13 @@ export default function CategoryPage({
     const url = `/api/products?` + params.toString();
     axios.get(url).then((res) => {
       setProducts(res.data);
+      setLoading(false);
+    }).catch((error) => {
+      console.error("Error fetching products:", error);
     });
-  }, [filtersValues]);
+  }, [filtersValues, sort]);
+
+  
   return (
     <>
       <Header />
@@ -96,9 +112,31 @@ export default function CategoryPage({
                 </select>
               </Filter>
             ))}
+            <Filter>
+              <span>Sortuj</span>
+              <select value={sort} onChange={(ev) => {setSort(ev.target.value); setFiltersChanged(true);}}>
+                <option value="price-asc">Cena(od najniższej)</option>
+                <option value="price-desc">Cena(od najwyższej)</option>
+                <option value="_id-desc">Data dodania(od najnowszych)</option>
+                <option value="_id-asc">Data dodania(od najstarszych)</option>
+              </select>
+            </Filter>
           </FiltersWrapper>
         </CategoryHeader>
-        <ProductsGrid products={products} />
+        {loading && (
+          <Spinner fullWidth />
+        )}
+        {!loading && (
+          <div>
+          {products.length > 0 && (
+            <ProductsGrid products={products} />)}
+          {products.length === 0 && (
+            <div>
+            Brak produktów o podanych kryteriach
+          </div>
+          )}
+          </div>
+          )}
       </Center>
     </>
   );
@@ -112,7 +150,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       category: JSON.parse(JSON.stringify(category)),
-      subCategory: JSON.parse(JSON.stringify(subCategories)),
+      subCategories: JSON.parse(JSON.stringify(subCategories)),
       products: JSON.parse(JSON.stringify(products)),
     },
   };

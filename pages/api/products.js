@@ -3,12 +3,22 @@ import { Product } from "@/model/Product";
 
 export default async function handle(req, res) {
   await mongooseConnect();
-  const { categories, ...filters } = req.query;
+  const { categories, sort, ...filters } = req.query;
+  const [sortField, sortOrder] = sort.split("-");
   const productsQuery = {
     category: categories.split(","),
   };
   if (Object.keys(filters).length > 0) {
-    productsQuery.properties = filters;
+    Object.keys(filters).forEach((filterName) => {
+      productsQuery["properties." + filterName] = filters[filterName];
+    });
   }
-  res.json(await Product.find(productsQuery));
+  console.log(productsQuery);
+  res.json(await Product.find(
+    productsQuery,
+    null,
+    {
+      sort:{[sortField]:sortOrder==='asc' ? 1 : -1}
+    })
+  );
 }
