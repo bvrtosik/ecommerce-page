@@ -32,22 +32,22 @@ const Wrapper = styled.div`
 
 const StyledNav = styled.nav`
   ${(props) =>
-    props.mobileNavActive
+    props['data-mobile-nav-active']
       ? `
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-background-color: #333;
-padding: 2rem;
-z-index: 2;
-`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: #333;
+        padding: 2rem;
+        z-index: 2;
+      `
       : `
-display: none;
-`}
+        display: none;
+      `}
 
   @media screen and (min-width: 768px) {
     display: flex;
@@ -94,6 +94,7 @@ const NavButton = styled.button`
   }
 `;
 
+
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
@@ -101,7 +102,7 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <StyledNav mobileNavActive={mobileNavActive}>
+          <StyledNav data-mobile-nav-active={mobileNavActive}>
             <NavButton onClick={() => setMobileNavActive(false)}>
               <Bars />
             </NavButton>
@@ -116,23 +117,23 @@ export default function Header() {
             <NavLink href={"/categories"}>Kategorie</NavLink>
             <NavLink href={"/account"}>Konto</NavLink>
             <NavLink href={"/cart"}>Koszyk ({cartProducts.length})</NavLink>
-            <NavLink href={"/account"}>
+          </StyledNav>
+          <NavLink href={"/search"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
-                class="w-6 h-6"
+                className="w-6 h-6"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
             </NavLink>
-          </StyledNav>
           <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
             <Bars />
           </NavButton>

@@ -21,7 +21,7 @@ export default function FlyingWrapper(props) {
       <FlyingButton
         {...props}
         targetTop={"5%"}
-        targetLeft={"85%"}
+        targetLeft={"65%"}
         flyingItemStaing={{
           maxHeight: "50px",
           maxHeight: "50px",

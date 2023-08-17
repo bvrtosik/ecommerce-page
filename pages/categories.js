@@ -72,7 +72,7 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
 
             <CategoryGrid>
               {categoriesProducts[cat._id].map((p) => (
-                <ProductBox {...p} />
+                <ProductBox key={p._id} {...p} />
               ))}
               <ShowALl href={"/category/" + cat._id}>Pokaż wszystkie</ShowALl>
             </CategoryGrid>

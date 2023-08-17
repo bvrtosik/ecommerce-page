@@ -95,7 +95,7 @@ export default function Content({ product }) {
                 >
                   <FlyingButton
                     targetTop={"5%"}
-                    targetLeft={"85%"}
+                    targetLeft={"65%"}
                     src="http://res.cloudinary.com/dobfxe13v/image/upload/v1692051872/sfwpvf4y18gxribmzebh.png"
                     flyingItemStaing={{ maxHeight: "50px", maxHeight: "50px" }}
                   >

@@ -152,7 +152,7 @@ export default function CartPage() {
                 </thead>
                 <tbody>
                   {products.map((product) => (
-                    <tr>
+                    <tr key={product._id}>
                       <ProductInfoCell>
                         <ProductImageBox>
                           <img src={product.images[0]} alt="" />
@@ -183,7 +183,7 @@ export default function CartPage() {
                   <tr>
                     <td></td>
                     <td></td>
-                    <td>{total} PLN</td>
+                    <td>{(Math.ceil(total * 100) / 100).toFixed(2)} PLN</td>
                   </tr>
                 </tbody>
               </Table>
