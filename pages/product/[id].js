@@ -1,6 +1,7 @@
 import Button from "@/components/Button";
 import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
+import FlyingWrapper from "@/components/FlyingWrapperr";
 import Header from "@/components/Header";
 import ProductImages from "@/components/ProductImages";
 import { mongooseConnect } from "@/lib/mongoose";
@@ -38,9 +39,6 @@ const Price = styled.span`
 
 export default function ProductPage({ product }) {
   const { addProduct } = useContext(CartContext);
-  function addFeaturedToCart() {
-    addProduct(product._id);
-  }
   return (
     <>
       <Header />
@@ -52,9 +50,9 @@ export default function ProductPage({ product }) {
             </div>
             <BuyRow>
               <Price>{product.price} PLN </Price>
-              <Button $primary={1} $outline={1} onClick={addFeaturedToCart}>
+              <FlyingWrapper _id={product._id} src={product.images?.[0]}>
                 Dodaj do koszyka
-              </Button>
+              </FlyingWrapper>
             </BuyRow>
             <div>
               <BuyRow>

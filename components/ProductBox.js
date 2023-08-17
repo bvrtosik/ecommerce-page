@@ -1,8 +1,10 @@
 import { styled } from "styled-components";
-import Button from "./Button";
+import Button, { ButtonStyle } from "./Button";
 import Link from "next/link";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import FlyingButton from "react-flying-item";
+import FlyingWrapper from "./FlyingWrapperr";
 
 const Box = styled(Link)`
   background-color: white;
@@ -60,9 +62,9 @@ export default function ProductBox({ _id, title, description, price, images }) {
         <Title href={url}>{title}</Title>
         <PriceRow>
           <Price>{price} PLN</Price>
-          <Button $primary={1} $outline={1} onClick={() => addProduct(_id)}>
+          <FlyingWrapper _id={_id} src={images?.[0]}>
             KUP
-          </Button>
+          </FlyingWrapper>
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>

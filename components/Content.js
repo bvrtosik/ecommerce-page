@@ -1,10 +1,11 @@
 import { styled } from "styled-components";
 import Center from "@/components/Center";
-import Button from "@/components/Button";
+import Button, { ButtonStyle } from "@/components/Button";
 import ButtonLink from "@/components/ButtonLink";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
 import React from "react";
+import FlyingButton from "react-flying-item";
 
 const Bground = styled.div`
   background-color: #222;
@@ -58,6 +59,12 @@ const WrapperButtons = styled.div`
   margin-top: 20px;
 `;
 
+const FlyingButtonWrapper = styled.div`
+  button {
+    ${ButtonStyle}
+  }
+`;
+
 export default function Content({ product }) {
   const { addProduct } = useContext(CartContext);
   function addFeaturedToCart() {
@@ -80,14 +87,21 @@ export default function Content({ product }) {
                 >
                   Czytaj więcej
                 </ButtonLink>
-                <Button
+                <FlyingButtonWrapper
                   $primary
                   $size="l"
                   key="addFeaturedToCart"
                   onClick={addFeaturedToCart}
                 >
-                  Dodaj do koszyka
-                </Button>
+                  <FlyingButton
+                    targetTop={"5%"}
+                    targetLeft={"85%"}
+                    src="http://res.cloudinary.com/dobfxe13v/image/upload/v1692051872/sfwpvf4y18gxribmzebh.png"
+                    flyingItemStaing={{ maxHeight: "50px", maxHeight: "50px" }}
+                  >
+                    Dodaj do koszyka
+                  </FlyingButton>
+                </FlyingButtonWrapper>
               </WrapperButtons>
             </div>
           </Column>
