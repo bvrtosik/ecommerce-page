@@ -2,8 +2,8 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import ProductsGrid from "@/components/ProductsGrid";
 import Spinner from "@/components/Spinner";
-import { Category } from "@/model/Category";
-import { Product } from "@/model/Product";
+import { Category } from "@/models/Category";
+import { Product } from "@/models/Product";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
@@ -46,13 +46,16 @@ export default function CategoryPage({
   subCategories,
   products: categoryProducts,
 }) {
-  const defaultSorting = '_id-desc';
-  const defaultFilterValues = category.properties.map((p) => ({ name: p.name, value: "all" }))
+  const defaultSorting = "_id-desc";
+  const defaultFilterValues = category.properties.map((p) => ({
+    name: p.name,
+    value: "all",
+  }));
   const [filtersValues, setFiltersValues] = useState(defaultFilterValues);
   const [products, setProducts] = useState(categoryProducts);
   const [sort, setSort] = useState(defaultSorting);
   const [loading, setLoading] = useState(false);
-  const [filtersChanged,setFiltersChanged] = useState(false);
+  const [filtersChanged, setFiltersChanged] = useState(false);
 
   function handleFilterChange(filterName, filterValue) {
     setFiltersValues((prev) => {
@@ -64,7 +67,7 @@ export default function CategoryPage({
     setFiltersChanged(true);
   }
   useEffect(() => {
-    if(!filtersChanged){
+    if (!filtersChanged) {
       return;
     }
     setLoading(true);
@@ -78,15 +81,17 @@ export default function CategoryPage({
       }
     });
     const url = `/api/products?` + params.toString();
-    axios.get(url).then((res) => {
-      setProducts(res.data);
-      setLoading(false);
-    }).catch((error) => {
-      console.error("Error fetching products:", error);
-    });
+    axios
+      .get(url)
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
   }, [filtersValues, sort]);
 
-  
   return (
     <>
       <Header />
@@ -114,7 +119,13 @@ export default function CategoryPage({
             ))}
             <Filter>
               <span>Sortuj</span>
-              <select value={sort} onChange={(ev) => {setSort(ev.target.value); setFiltersChanged(true);}}>
+              <select
+                value={sort}
+                onChange={(ev) => {
+                  setSort(ev.target.value);
+                  setFiltersChanged(true);
+                }}
+              >
                 <option value="price-asc">Cena(od najniższej)</option>
                 <option value="price-desc">Cena(od najwyższej)</option>
                 <option value="_id-desc">Data dodania(od najnowszych)</option>
@@ -123,20 +134,15 @@ export default function CategoryPage({
             </Filter>
           </FiltersWrapper>
         </CategoryHeader>
-        {loading && (
-          <Spinner fullWidth />
-        )}
+        {loading && <Spinner fullWidth />}
         {!loading && (
           <div>
-          {products.length > 0 && (
-            <ProductsGrid products={products} />)}
-          {products.length === 0 && (
-            <div>
-            Brak produktów o podanych kryteriach
+            {products.length > 0 && <ProductsGrid products={products} />}
+            {products.length === 0 && (
+              <div>Brak produktów o podanych kryteriach</div>
+            )}
           </div>
-          )}
-          </div>
-          )}
+        )}
       </Center>
     </>
   );

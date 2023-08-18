@@ -5,7 +5,7 @@ import FlyingWrapper from "@/components/FlyingWrapperr";
 import Header from "@/components/Header";
 import ProductImages from "@/components/ProductImages";
 import { mongooseConnect } from "@/lib/mongoose";
-import { Product } from "@/model/Product";
+import { Product } from "@/models/Product";
 import { useContext } from "react";
 import { styled } from "styled-components";
 

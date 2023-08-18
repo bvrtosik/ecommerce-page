@@ -13,8 +13,8 @@ const SearchInput = styled(Input)`
   margin: 30px 0 10px;
   font-size: 1rem;
   border-radius: 15px;
-  position:sticky;
-  top:20px;
+  position: sticky;
+  top: 20px;
 `;
 
 const Info = styled.h2`
@@ -23,7 +23,6 @@ const Info = styled.h2`
   text-transform: uppercase;
   letter-spacing: 0.1em;
 `;
-
 
 export default function SearchPage() {
   const [searchValue, setSearchValue] = useState("");

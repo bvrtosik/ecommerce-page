@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Table from "@/components/Table";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { RevealWrapper } from "next-reveal";
 import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 
@@ -61,6 +63,7 @@ const AdresData = styled.div`
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
+  const { data: session } = useSession();
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -88,6 +91,19 @@ export default function CartPage() {
       clearCart();
     }
   }, []);
+  useEffect(() => {
+    if (!session) {
+      return;
+    }
+    axios.get("/api/address").then((response) => {
+      setName(response.data.name);
+      setEmail(response.data.email);
+      setCity(response.data.city);
+      setPostCode(response.data.postCode);
+      setStreet(response.data.street);
+      setNumberHome(response.data.numberHome);
+    });
+  }, [session]);
 
   function addMoreProduct(id) {
     addProduct(id);
@@ -121,13 +137,15 @@ export default function CartPage() {
         <Header />
         <Center>
           <ColWrapper>
-            <CartBox>
-              <h1>Super! Udało Ci się złożyć zamówienie!</h1>
-              <p>
-                Otrzymasz od nas stosowną wiadomość mailową, gdy tylko wyślemy
-                zamówienie.😊
-              </p>
-            </CartBox>
+            <RevealWrapper delay={0}>
+              <CartBox>
+                <h1>Super! Udało Ci się złożyć zamówienie!</h1>
+                <p>
+                  Otrzymasz od nas stosowną wiadomość mailową, gdy tylko wyślemy
+                  zamówienie.😊
+                </p>
+              </CartBox>
+            </RevealWrapper>
           </ColWrapper>
         </Center>
       </>
@@ -138,110 +156,115 @@ export default function CartPage() {
       <Header />
       <Center>
         <ColWrapper>
-          <CartBox>
-            <h2>Koszyk</h2>
-            {!cartProducts?.length && <div>Koszyk jest pusty</div>}
-            {products?.length > 0 && (
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Produkt</th>
-                    <th>Ilość</th>
-                    <th>Cena</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr key={product._id}>
-                      <ProductInfoCell>
-                        <ProductImageBox>
-                          <img src={product.images[0]} alt="" />
-                        </ProductImageBox>
-                        {product.title}
-                      </ProductInfoCell>
-                      <td>
-                        <Button onClick={() => minusProduct(product._id)}>
-                          -
-                        </Button>
-                        <QuantityLabel>
-                          {
-                            cartProducts.filter((id) => id === product._id)
-                              .length
-                          }
-                        </QuantityLabel>
-                        <Button onClick={() => addMoreProduct(product._id)}>
-                          +
-                        </Button>
-                      </td>
-                      <td>
-                        {cartProducts.filter((id) => id === product._id)
-                          .length * product.price}{" "}
-                        PLN
-                      </td>
-                    </tr>
-                  ))}
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td>{(Math.ceil(total * 100) / 100).toFixed(2)} PLN</td>
-                  </tr>
-                </tbody>
-              </Table>
-            )}
-          </CartBox>
-          {!!cartProducts?.length && (
+          <RevealWrapper delay={0}>
             <CartBox>
-              <h2>Informacje</h2>
-              <Input
-                type="text"
-                placeholder="Imię i Nazwisko"
-                value={name}
-                name="name"
-                onChange={(ev) => setName(ev.target.value)}
-              />
-              <Input
-                type="text"
-                placeholder="E-mail"
-                value={email}
-                name="email"
-                onChange={(ev) => setEmail(ev.target.value)}
-              />
-              <AdresData>
-                <Input
-                  type="text"
-                  placeholder="Kod pocztowy"
-                  value={postCode}
-                  name="postCode"
-                  onChange={(ev) => setPostCode(ev.target.value)}
-                />
-                <Input
-                  type="text"
-                  placeholder="Miasto"
-                  value={city}
-                  name="city"
-                  onChange={(ev) => setCity(ev.target.value)}
-                />
-              </AdresData>
-              <AdresData>
-                <Input
-                  type="text"
-                  placeholder="Ulica"
-                  value={street}
-                  name="street"
-                  onChange={(ev) => setStreet(ev.target.value)}
-                />
-                <Input
-                  type="text"
-                  placeholder="Numer domu/mieszkania"
-                  value={numberHome}
-                  name="numberHome"
-                  onChange={(ev) => setNumberHome(ev.target.value)}
-                />
-              </AdresData>
-              <Button $block={1} $primary={1} onClick={paymentProcess}>
-                Przejdź dalej
-              </Button>
+              <h2>Koszyk</h2>
+              {!cartProducts?.length && <div>Koszyk jest pusty</div>}
+              {products?.length > 0 && (
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Produkt</th>
+                      <th>Ilość</th>
+                      <th>Cena</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product) => (
+                      <tr key={product._id}>
+                        <ProductInfoCell>
+                          <ProductImageBox>
+                            <img src={product.images[0]} alt="" />
+                          </ProductImageBox>
+                          {product.title}
+                        </ProductInfoCell>
+                        <td>
+                          <Button onClick={() => minusProduct(product._id)}>
+                            -
+                          </Button>
+                          <QuantityLabel>
+                            {
+                              cartProducts.filter((id) => id === product._id)
+                                .length
+                            }
+                          </QuantityLabel>
+                          <Button onClick={() => addMoreProduct(product._id)}>
+                            +
+                          </Button>
+                        </td>
+                        <td>
+                          {cartProducts.filter((id) => id === product._id)
+                            .length * product.price}{" "}
+                          PLN
+                        </td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td>{(Math.ceil(total * 100) / 100).toFixed(2)} PLN</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              )}
             </CartBox>
+          </RevealWrapper>
+
+          {!!cartProducts?.length && (
+            <RevealWrapper delay={100}>
+              <CartBox>
+                <h2>Informacje</h2>
+                <Input
+                  type="text"
+                  placeholder="Imię i Nazwisko"
+                  value={name}
+                  name="name"
+                  onChange={(ev) => setName(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="E-mail"
+                  value={email}
+                  name="email"
+                  onChange={(ev) => setEmail(ev.target.value)}
+                />
+                <AdresData>
+                  <Input
+                    type="text"
+                    placeholder="Kod pocztowy"
+                    value={postCode}
+                    name="postCode"
+                    onChange={(ev) => setPostCode(ev.target.value)}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Miasto"
+                    value={city}
+                    name="city"
+                    onChange={(ev) => setCity(ev.target.value)}
+                  />
+                </AdresData>
+                <AdresData>
+                  <Input
+                    type="text"
+                    placeholder="Ulica"
+                    value={street}
+                    name="street"
+                    onChange={(ev) => setStreet(ev.target.value)}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Numer domu/mieszkania"
+                    value={numberHome}
+                    name="numberHome"
+                    onChange={(ev) => setNumberHome(ev.target.value)}
+                  />
+                </AdresData>
+                <Button $block={1} $primary={1} onClick={paymentProcess}>
+                  Przejdź dalej
+                </Button>
+              </CartBox>
+            </RevealWrapper>
           )}
         </ColWrapper>
       </Center>

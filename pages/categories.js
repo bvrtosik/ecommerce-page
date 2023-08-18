@@ -1,8 +1,8 @@
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import ProductBox from "@/components/ProductBox";
-import { Category } from "@/model/Category";
-import { Product } from "@/model/Product";
+import { Category } from "@/models/Category";
+import { Product } from "@/models/Product";
 import Link from "next/link";
 import { styled } from "styled-components";
 
