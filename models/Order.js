@@ -1,5 +1,4 @@
 import mongoose, { model, models, Schema } from "mongoose";
-s;
 
 const OrderSchema = new Schema(
   {

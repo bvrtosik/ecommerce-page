@@ -8,6 +8,7 @@ import Input from "@/components/Input";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
+import OrderBox from "@/components/OrderBox";
 
 const Title = styled.h1`
   margin: 0;
@@ -25,7 +26,7 @@ const ColWrapper = styled.div`
   gap: 40px;
   margin-top: 30px;
   @media screen and (min-width: 768px) {
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 0.8fr 1.2fr;
   }
 `;
 
@@ -49,6 +50,8 @@ export default function AccountPage() {
   const [street, setStreet] = useState("");
   const [numberHome, setNumberHome] = useState("");
   const [addressLoaded, setAddressLoaded] = useState(true);
+  const [ordersLoaded, setOrdersLoaded] = useState(true);
+  const [orders, setOrders] = useState([]);
   async function logout() {
     await signOut({
       callbackUrl: process.env.NEXT_HOME_URL,
@@ -66,6 +69,7 @@ export default function AccountPage() {
       return;
     }
     setAddressLoaded(false);
+    setOrdersLoaded(false);
     axios
       .get("/api/address")
       .then((response) => {
@@ -81,6 +85,10 @@ export default function AccountPage() {
         console.error("Error getting address:", error);
         setAddressLoaded(true);
       });
+    axios.get("/api/orders").then((response) => {
+      setOrders(response.data);
+      setOrdersLoaded(true);
+    });
   }, [session]);
   return (
     <>
@@ -91,7 +99,7 @@ export default function AccountPage() {
             <Box>
               <Title>Informacje na temat konta</Title>
               {!addressLoaded && <Spinner fullWidth />}
-              {addressLoaded && (
+              {addressLoaded && session && (
                 <>
                   <Input
                     type="text"
@@ -149,6 +157,12 @@ export default function AccountPage() {
           <RevealWrapper delay={100}>
             <Box>
               <Title>Zamówienia</Title>
+              {!ordersLoaded && <Spinner fullWidth />}
+              {ordersLoaded && (
+                <div>
+                  {orders.length > 0 && orders.map((o) => <OrderBox {...o} />)}
+                </div>
+              )}
             </Box>
           </RevealWrapper>
         </ColWrapper>
